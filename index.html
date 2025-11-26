@@ -1,126 +1,136 @@
 <!DOCTYPE html>
 <html>
 <head>
-<title>Discipleship Class Dashboard</title>
-<meta name="viewport" content="width=device-width, initial-scale=1">
-<style>
-body{font-family:Arial;margin:0;background:#f5f5f5}
-.container{max-width:1000px;margin:auto;background:white;padding:20px;margin-top:30px;border-radius:10px;box-shadow:0 4px 10px rgba(0,0,0,0.1)}
-input,button,select{width:100%;padding:10px;margin:6px 0;border-radius:6px;border:1px solid #ccc;box-sizing:border-box}
-button{background:#2b6cb0;color:white;font-size:16px;border:none;cursor:pointer}
-button:hover{background:#225a90}
-.hidden{display:none}
-.tab-buttons{display:flex;gap:10px;margin-bottom:20px}
-.tab-buttons button{flex:1}
-.tab-content{display:none}
-.tab-content.active{display:block}
-.table-container{overflow-x:auto;margin-top:20px}
-table{width:100%;border-collapse:collapse;margin-top:20px}
-th, td{padding:8px;border:1px solid #ddd;text-align:left}
-th{background:#2b6cb0;color:white;cursor:pointer}
-td.yes{background:#c6f6d5;color:#22543d;text-align:center;font-weight:bold;cursor:pointer}
-td.no{background:#fed7d7;color:#822727;text-align:center;font-weight:bold;cursor:pointer}
-.pagination button{margin:2px;padding:6px 10px}
-#loader{display:none;width:60px;height:60px;border:6px solid #ddd;border-top:6px solid #2b6cb0;border-radius:50%;animation:spin 1s linear infinite;margin:20px auto}
-@keyframes spin{100%{transform:rotate(360deg)}}
-.input-password{position:relative;}
-.eye-icon{position:absolute;right:20px;top:36px;cursor:pointer}
-.adminList{margin-top:20px;border:1px solid #ccc;padding:10px;border-radius:6px}
-.adminList div{display:flex;justify-content:space-between;align-items:center;margin-bottom:6px}
-.lesson-row{display:flex;justify-content:space-between;align-items:center;margin-bottom:6px}
-.lesson-row label{flex:1}
-.lesson-row select{flex:0 0 80px}
-.class-control{display:flex;align-items:center;gap:10px;margin-top:6px}
-.class-control button{width:40px;padding:6px}
-.sheet-link{margin-top:10px;display:block;font-size:14px;color:#2b6cb0;text-decoration:underline;cursor:pointer}
-</style>
+  <title>Discipleship Class Dashboard</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <style>
+    body { font-family: Arial; margin: 0; background: #f5f5f5; }
+    .container { max-width: 1000px; margin: auto; background: white; padding: 20px; margin-top: 30px; border-radius: 10px; box-shadow: 0 4px 10px rgba(0,0,0,0.1); }
+    input, button, select { width: 100%; padding: 10px; margin: 6px 0; border-radius: 6px; border: 1px solid #ccc; box-sizing: border-box; }
+    button { background: #2b6cb0; color: white; font-size: 16px; border: none; cursor: pointer; }
+    button:hover { background: #225a90; }
+    .hidden { display: none; }
+    .tab-buttons { display: flex; gap: 10px; margin-bottom: 20px; }
+    .tab-buttons button { flex: 1; }
+    .tab-content { display: none; }
+    .tab-content.active { display: block; }
+    .table-container { overflow-x: auto; margin-top: 20px; }
+    table { width: 100%; border-collapse: collapse; margin-top: 20px; }
+    th, td { padding: 8px; border: 1px solid #ddd; text-align: left; }
+    th { background: #2b6cb0; color: white; cursor: pointer; }
+    td.yes { background: #c6f6d5; color: #22543d; text-align: center; font-weight: bold; cursor:pointer; }
+    td.no { background: #fed7d7; color: #822727; text-align: center; font-weight: bold; cursor:pointer; }
+    .pagination button { margin: 2px; padding: 6px 10px; }
+    #loader { display: none; width: 60px; height: 60px; border: 6px solid #ddd; border-top: 6px solid #2b6cb0; border-radius: 50%; animation: spin 1s linear infinite; margin: 20px auto; }
+    @keyframes spin { 100% { transform: rotate(360deg); } }
+    .input-password { position: relative; }
+    .eye-icon { position: absolute; right: 20px; top: 36px; cursor: pointer; }
+    .adminList { margin-top: 20px; border: 1px solid #ccc; padding: 10px; border-radius: 6px; }
+    .adminList div { display: flex; justify-content: space-between; align-items: center; margin-bottom: 6px; }
+    .number-input { display:flex; align-items:center; gap:5px; }
+    .sheet-link { display:inline-block; background:#2b6cb0; color:white; padding:8px 16px; border-radius:6px; text-decoration:none; margin-bottom:10px; }
+    .sheet-link:hover { background:#225a90; }
+    select { cursor: pointer; }
+  </style>
 </head>
 <body>
 <div class="container">
 
-<h2>Admin Login</h2>
-<div id="loginSection">
-  <label>Username</label>
-  <input id="adminUser" type="text">
-  <div class="input-password">
-    <label>Password</label>
-    <input id="adminPass" type="password">
-    <span class="eye-icon" onclick="togglePassword()">👁️</span>
-  </div>
-  <button onclick="adminLogin()">Login</button>
-</div>
-
-<div id="loader"></div>
-
-<div id="adminSection" class="hidden">
-
-  <!-- Link to SheetDB -->
-  <a id="sheetLink" class="sheet-link" target="_blank">Open SheetDB</a>
-
-  <!-- Tabs -->
-  <div class="tab-buttons">
-    <button onclick="showTab('formTab')" class="active" id="formTabBtn">Attendance Form</button>
-    <button onclick="showTab('recordsTab')" id="recordsTabBtn">Student Records</button>
-    <button onclick="showTab('adminsTab')" id="adminsTabBtn">Admin Accounts</button>
-  </div>
-
-  <!-- Attendance Form -->
-  <div id="formTab" class="tab-content active">
-    <h3>Add Attendance</h3>
-    <label>Student Name</label>
-    <input id="studentName" type="text" placeholder="Full name">
-
-    <label>Country Code</label>
-    <select id="countryCodeSelect"></select>
-    <label>Phone Number</label>
-    <input id="studentPhone" type="text" placeholder="Phone number without code">
-
-    <label>Class</label>
-    <div class="class-control">
-      <button onclick="changeClass(-1)">-</button>
-      <input id="studentClass" type="number" value="1" min="1" max="12">
-      <button onclick="changeClass(1)">+</button>
+  <h2>Admin Login</h2>
+  <div id="loginSection">
+    <label>Username</label>
+    <input id="adminUser" type="text">
+    <div class="input-password">
+      <label>Password</label>
+      <input id="adminPass" type="password">
+      <span class="eye-icon" onclick="togglePassword()">👁️</span>
     </div>
-    <div id="lessonsContainer"></div>
-    <button onclick="addAttendance()">Add Record</button>
+    <button onclick="adminLogin()">Login</button>
   </div>
 
-  <!-- Student Records Table -->
-  <div id="recordsTab" class="tab-content">
-    <h3>Student Records</h3>
-    <div class="table-container">
-      <table>
-        <thead>
-          <tr>
-            <th>Timestamp</th><th>Student</th><th>Phone</th><th>Class</th>
-            <th>Salvation</th><th>Temptation</th><th>Prayers</th><th>Bible</th>
-            <th>Fellowship</th><th>Witnessing</th><th>Baptism</th><th>HolySpirit</th>
-            <th>Giving</th><th>Deliverance</th><th>Evangelism</th>
-          </tr>
-        </thead>
-        <tbody id="tableBody"></tbody>
-      </table>
+  <div id="loader"></div>
+
+  <div id="adminSection" class="hidden">
+
+    <!-- Link to Google Sheet -->
+    <p>
+      <a href="https://docs.google.com/spreadsheets/d/1FjpVqmpGIX1GlQyXNe6UHn9NwhPvKWV3jXegwPMXUBc/edit?gid=0" target="_blank" class="sheet-link">Open Google Sheet</a>
+    </p>
+
+    <!-- Tabs -->
+    <div class="tab-buttons">
+      <button onclick="showTab('formTab')" class="active" id="formTabBtn">Attendance Form</button>
+      <button onclick="showTab('recordsTab')" id="recordsTabBtn">Student Records</button>
+      <button onclick="showTab('adminsTab')" id="adminsTabBtn">Admin Accounts</button>
     </div>
-    <div class="pagination" id="paginationControls"></div>
-  </div>
 
-  <!-- Admin Management -->
-  <div id="adminsTab" class="tab-content">
-    <h3>Manage Admin Accounts</h3>
-    <div>
-      <label>New Username</label>
-      <input id="newAdminUser" type="text">
-      <div class="input-password">
-        <label>New Password</label>
-        <input id="newAdminPass" type="password">
-        <span class="eye-icon" onclick="toggleNewPassword()">👁️</span>
+    <!-- Attendance Form -->
+    <div id="formTab" class="tab-content active">
+      <h3>Add Attendance</h3>
+      <label>Student Name</label>
+      <input id="studentName" type="text">
+
+      <label>Phone</label>
+      <div class="number-input">
+        <select id="countryCode">
+          <option value="+1">USA +1</option>
+          <option value="+254">Kenya +254</option>
+          <option value="+44">UK +44</option>
+          <option value="+91">India +91</option>
+          <!-- Add more countries as needed -->
+        </select>
+        <input id="studentPhone" type="text" placeholder="Phone number">
       </div>
-      <button onclick="addAdmin()">Add Admin</button>
-    </div>
-    <div class="adminList" id="adminList"></div>
-  </div>
 
-</div>
+      <label>Class Number</label>
+      <div class="number-input">
+        <button type="button" onclick="changeClass(-1)">-</button>
+        <input id="studentClass" type="number" value="1" min="1" max="12">
+        <button type="button" onclick="changeClass(1)">+</button>
+      </div>
+
+      <h4>Lessons Completed</h4>
+      <div id="lessonsContainer"></div>
+
+      <button onclick="addAttendance()">Add Record</button>
+    </div>
+
+    <!-- Student Records Table -->
+    <div id="recordsTab" class="tab-content">
+      <h3>Student Records</h3>
+      <div class="table-container">
+        <table>
+          <thead>
+            <tr>
+              <th>Timestamp</th><th>Student</th><th>Phone</th><th>Class</th>
+              <th>Salvation</th><th>Temptation</th><th>Prayers</th><th>Bible</th>
+              <th>Fellowship</th><th>Witnessing</th><th>Baptism</th><th>HolySpirit</th>
+              <th>Giving</th><th>Deliverance</th><th>Evangelism</th>
+            </tr>
+          </thead>
+          <tbody id="tableBody"></tbody>
+        </table>
+      </div>
+      <div class="pagination" id="paginationControls"></div>
+    </div>
+
+    <!-- Admin Management -->
+    <div id="adminsTab" class="tab-content">
+      <h3>Manage Admin Accounts</h3>
+      <div>
+        <label>New Username</label>
+        <input id="newAdminUser" type="text">
+        <div class="input-password">
+          <label>New Password</label>
+          <input id="newAdminPass" type="password">
+          <span class="eye-icon" onclick="toggleNewPassword()">👁️</span>
+        </div>
+        <button onclick="addAdmin()">Add Admin</button>
+      </div>
+      <div class="adminList" id="adminList"></div>
+    </div>
+
+  </div>
 </div>
 
 <script>
@@ -132,137 +142,124 @@ let adminAccounts = [
   { username:"admin2", password:"Admin2Pass", blocked:false }
 ];
 
-let lessons = ["Salvation","Temptation","Prayers","Bible","Fellowship","Witnessing","Baptism","HolySpirit","Giving","Deliverance","Evangelism"];
-let countryList = [
-  {code:"+1", name:"USA"}, {code:"+254", name:"Kenya"}, {code:"+44", name:"UK"}, 
-  {code:"+91", name:"India"}, {code:"+61", name:"Australia"}, {code:"+81", name:"Japan"},
-  {code:"+49", name:"Germany"}, {code:"+33", name:"France"}, {code:"+39", name:"Italy"},
-  {code:"+7", name:"Russia"}, {code:"+20", name:"Egypt"}
-];
-
 let allRecords=[], filteredRecords=[], currentPage=1, rowsPerPage=10;
+const lessons = ["Salvation","Temptation","Prayers","Bible","Fellowship","Witnessing","Baptism","HolySpirit","Giving","Deliverance","Evangelism"];
 
-// --- Password toggles ---
-function togglePassword(){ const pass=document.getElementById("adminPass"); pass.type=(pass.type==="password")?"text":"password";}
-function toggleNewPassword(){ const pass=document.getElementById("newAdminPass"); pass.type=(pass.type==="password")?"text":"password";}
+// Populate lessons checkboxes
+const lessonsContainer = document.getElementById("lessonsContainer");
+lessons.forEach(lesson => {
+  const div = document.createElement("div");
+  div.innerHTML = `<label>${lesson}: <select data-lesson="${lesson}"><option value="no">No</option><option value="yes">Yes</option></select></label>`;
+  lessonsContainer.appendChild(div);
+});
 
-// --- Login ---
+// Toggle password visibility
+function togglePassword(){ document.getElementById("adminPass").type = document.getElementById("adminPass").type==="password"?"text":"password";}
+function toggleNewPassword(){ document.getElementById("newAdminPass").type = document.getElementById("newAdminPass").type==="password"?"text":"password";}
+
+// Login
 function adminLogin(){
-  const u=document.getElementById("adminUser").value;
-  const p=document.getElementById("adminPass").value;
-  const admin=adminAccounts.find(a=>a.username===u && a.password===p);
-  if(!admin){alert("Wrong credentials"); return;}
-  if(admin.blocked){alert("Access denied. You are blocked."); return;}
+  const u = document.getElementById("adminUser").value;
+  const p = document.getElementById("adminPass").value;
+  const admin = adminAccounts.find(a => a.username===u && a.password===p);
+  if(!admin){ alert("Wrong credentials"); return; }
+  if(admin.blocked){ alert("Access denied. You are blocked."); return; }
   document.getElementById("loginSection").style.display="none";
-  generateCountryDropdown();
-  generateLessonsForm();
-  document.getElementById("sheetLink").href=SHEETDB_URL;
   loadAllRecords();
 }
 
-// --- Country dropdown ---
-function generateCountryDropdown(){
-  const select=document.getElementById("countryCodeSelect");
-  select.innerHTML="";
-  countryList.forEach(c=>{
-    const opt=document.createElement("option");
-    opt.value=c.code;
-    opt.textContent=`${c.name} (${c.code})`;
-    select.appendChild(opt);
-  });
-}
-
-// --- Phone validation ---
-function isValidPhone(phone){
-  return /^[0-9]{6,15}$/.test(phone); // simple numeric validation
-}
-
-// --- Generate lessons Yes/No selects ---
-function generateLessonsForm(){
-  const container=document.getElementById("lessonsContainer");
-  container.innerHTML="";
-  lessons.forEach(l=>{
-    const div=document.createElement("div");
-    div.className="lesson-row";
-    div.innerHTML=`<label>${l}</label>
-      <select id="lesson_${l}">
-        <option value="no">No</option>
-        <option value="yes">Yes</option>
-      </select>`;
-    container.appendChild(div);
-  });
-}
-
-// --- Class number buttons ---
-function changeClass(val){
-  const input=document.getElementById("studentClass");
-  let num=parseInt(input.value)||1;
-  num+=val;
-  if(num<1) num=1;
-  if(num>12) num=12;
-  input.value=num;
-}
-
-// --- Add attendance ---
-function addAttendance(){
-  const name=document.getElementById("studentName").value.trim();
-  const phoneNum=document.getElementById("studentPhone").value.trim();
-  const code=document.getElementById("countryCodeSelect").value;
-  const cls=document.getElementById("studentClass").value.trim();
-  if(!name || !phoneNum || !cls){alert("All fields required"); return;}
-  if(!isValidPhone(phoneNum)){alert("Invalid phone number. Enter numeric digits only."); return;}
-  const fullPhone = code + phoneNum;
-  let payload={Student:name,Phone:fullPhone,Class:cls,Timestamp:new Date().toLocaleString()};
-  lessons.forEach(l=>payload[l]=document.getElementById(`lesson_${l}`).value);
-
-  showLoader(true);
-  fetch(SHEETDB_URL,{
-    method:"POST",
-    headers:{"Content-Type":"application/json"},
-    body: JSON.stringify(payload)
-  }).then(r=>r.json()).then(()=>{
-    alert("Record added!");
-    document.getElementById("studentName").value="";
-    document.getElementById("studentPhone").value="";
-    document.getElementById("studentClass").value="1";
-    generateLessonsForm();
-    loadAllRecords();
-  }).catch(()=>alert("Error adding record")).finally(()=>showLoader(false));
-}
-
-// --- Load records ---
+// Load records
 function loadAllRecords(){
   showLoader(true);
   fetch(SHEETDB_URL)
     .then(r=>r.json())
     .then(data=>{
       showLoader(false);
-      allRecords=data;
-      filteredRecords=allRecords;
+      allRecords = data;
+      filteredRecords = allRecords;
       document.getElementById("adminSection").classList.remove("hidden");
       renderTable();
       renderAdminList();
     })
-    .catch(()=>{showLoader(false);alert("Error loading records");});
+    .catch(()=>{ showLoader(false); alert("Error loading records"); });
 }
 
-// --- Table rendering ---
+// Show loader
+function showLoader(show){ document.getElementById("loader").style.display=show?"block":"none"; }
+
+// Tab switching
+function showTab(tabId){
+  document.querySelectorAll(".tab-content").forEach(c=>c.classList.remove("active"));
+  document.getElementById(tabId).classList.add("active");
+  document.querySelectorAll(".tab-buttons button").forEach(b=>b.classList.remove("active"));
+  document.getElementById(tabId+"Btn").classList.add("active");
+}
+
+// Attendance: change class number
+function changeClass(delta){
+  const input = document.getElementById("studentClass");
+  let val = parseInt(input.value)||1;
+  val += delta;
+  if(val<1) val=1;
+  if(val>12) val=12;
+  input.value = val;
+}
+
+// Attendance: add record
+function addAttendance(){
+  const name = document.getElementById("studentName").value.trim();
+  const phone = document.getElementById("countryCode").value + document.getElementById("studentPhone").value.trim();
+  const cls = document.getElementById("studentClass").value;
+  if(!name || !phone || !cls){ alert("All fields required"); return; }
+
+  const lessonValues = {};
+  lessons.forEach(lesson => {
+    const val = document.querySelector(`select[data-lesson="${lesson}"]`).value;
+    lessonValues[lesson] = val;
+  });
+
+  const payload = { Timestamp: new Date().toISOString(), Student:name, Phone:phone, Class:cls, ...lessonValues };
+
+  fetch(SHEETDB_URL, {
+    method:"POST",
+    headers: {"Content-Type":"application/json"},
+    body: JSON.stringify(payload)
+  }).then(()=> {
+    alert("Record added!");
+    document.getElementById("studentName").value="";
+    document.getElementById("studentPhone").value="";
+    document.getElementById("studentClass").value="1";
+    lessons.forEach(lesson => document.querySelector(`select[data-lesson="${lesson}"]`).value="no");
+    loadAllRecords();
+  }).catch(()=>alert("Error adding record"));
+}
+
+// Render table
 function renderTable(){
   const tb=document.getElementById("tableBody");
   tb.innerHTML="";
   const start=(currentPage-1)*rowsPerPage;
   const pageRecords=filteredRecords.slice(start,start+rowsPerPage);
   pageRecords.forEach(r=>{
-    const tr=document.createElement("tr");
+    let tr=document.createElement("tr");
     Object.keys(r).forEach(k=>{
-      const td=document.createElement("td");
-      td.textContent=r[k]||"";
+      let td=document.createElement("td");
+      td.textContent = r[k];
       if(lessons.includes(k)){
-        td.className=(r[k]==="yes")?"yes":"no";
-        td.onclick=()=>{toggleYesNo(td,r,k);}
-      } else if(k==="Class" || k==="Student" || k==="Phone"){
-        td.contentEditable=true;
-        td.onblur=()=>{updateSheet(r, k, td.textContent);}
+        td.className = r[k]==="yes"?"yes":"no";
+        td.onclick = ()=>{ toggleYesNo(td, r, k); }
+      } else if(k==="Class") {
+        td.style.cursor="pointer";
+        td.onclick = ()=>{ 
+          const newClass = prompt("Edit Class Number", td.textContent); 
+          if(newClass) updateRecord(r, "Class", newClass); 
+        };
+      } else if(k==="Student" || k==="Phone"){
+        td.style.cursor="pointer";
+        td.onclick = ()=>{ 
+          const newVal = prompt(`Edit ${k}`, td.textContent); 
+          if(newVal) updateRecord(r, k, newVal);
+        };
       }
       tr.appendChild(td);
     });
@@ -271,65 +268,47 @@ function renderTable(){
   renderPagination();
 }
 
-// --- Toggle Yes/No in table ---
+// Toggle Yes/No
 function toggleYesNo(td,row,key){
-  const newVal=td.textContent==="yes"?"no":"yes";
-  td.textContent=newVal;
-  td.className=(newVal==="yes")?"yes":"no";
-  updateSheet(row,key,newVal);
+  const newVal = td.textContent==="yes"?"no":"yes";
+  td.textContent = newVal;
+  td.className = newVal==="yes"?"yes":"no";
+  updateRecord(row,key,newVal);
 }
 
-// --- Update SheetDB ---
-function updateSheet(row,key,value){
+// Update record in SheetDB
+function updateRecord(row, key, value){
   fetch(`${SHEETDB_URL}?Student=${encodeURIComponent(row.Student)}&Phone=${encodeURIComponent(row.Phone)}`,{
     method:"PATCH",
-    headers:{"Content-Type":"application/json"},
+    headers:{ "Content-Type":"application/json" },
     body: JSON.stringify({ [key]:value })
-  });
+  }).then(()=> loadAllRecords());
 }
 
-// --- Pagination ---
+// Pagination
 function renderPagination(){
   const totalPages=Math.ceil(filteredRecords.length/rowsPerPage);
   const p=document.getElementById("paginationControls"); p.innerHTML="";
   if(totalPages<2) return;
   let prev=document.createElement("button"); prev.textContent="Prev"; prev.disabled=currentPage===1; prev.onclick=()=>{currentPage--; renderTable();}; p.appendChild(prev);
   for(let i=1;i<=totalPages;i++){
-    let b=document.createElement("button");
-    b.textContent=i;
-    b.disabled=i===currentPage;
-    b.onclick=()=>{currentPage=i; renderTable();};
+    let b=document.createElement("button"); b.textContent=i; b.disabled=i===currentPage; b.onclick=()=>{currentPage=i; renderTable();};
     p.appendChild(b);
   }
-  let next=document.createElement("button"); next.textContent="Next"; next.disabled=currentPage===totalPages; next.onclick=()=>{currentPage++; renderTable();}; p.appendChild(next);
+  let next=document.createElement("button"); next.textContent="Next"; next.disabled=currentPage===totalPages; next.onclick=()=>{currentPage++; renderTable();};
+  p.appendChild(next);
 }
 
-// --- Tabs ---
-function showTab(tabId){
-  document.querySelectorAll(".tab-content").forEach(c=>c.classList.remove("active"));
-  document.getElementById(tabId).classList.add("active");
-  document.querySelectorAll(".tab-buttons button").forEach(b=>b.classList.remove("active"));
-  document.querySelector(`#${tabId}Btn`).classList.add("active");
-}
-
-// --- Loader ---
-function showLoader(show){document.getElementById("loader").style.display=show?"block":"none";}
-
-// --- Admin Management ---
+// Admin management
 function renderAdminList(){
   const container=document.getElementById("adminList");
   container.innerHTML="";
   adminAccounts.forEach((a,index)=>{
     const div=document.createElement("div");
     div.innerHTML=`<span>${a.username} ${a.blocked?"(Blocked)":"(Active)"}</span>`;
-    const blockBtn=document.createElement("button");
-    blockBtn.textContent=a.blocked?"Unblock":"Block";
-    blockBtn.onclick=()=>{a.blocked=!a.blocked; renderAdminList();};
-    const changePassBtn=document.createElement("button");
-    changePassBtn.textContent="Change Password";
-    changePassBtn.onclick=()=>{changePassword(index)};
-    div.appendChild(blockBtn);
-    div.appendChild(changePassBtn);
+    const blockBtn=document.createElement("button"); blockBtn.textContent=a.blocked?"Unblock":"Block"; blockBtn.onclick=()=>{ a.blocked=!a.blocked; renderAdminList(); };
+    const changePassBtn=document.createElement("button"); changePassBtn.textContent="Change Password"; changePassBtn.onclick=()=>{ changePassword(index); };
+    div.appendChild(blockBtn); div.appendChild(changePassBtn);
     container.appendChild(div);
   });
 }
@@ -345,11 +324,10 @@ function addAdmin(){
 }
 
 function changePassword(index){
-  const newPass=prompt("Enter new password for "+adminAccounts[index].username);
+  const newPass = prompt("Enter new password for "+adminAccounts[index].username);
   if(newPass) adminAccounts[index].password=newPass;
   renderAdminList();
 }
 </script>
 </body>
 </html>
-
