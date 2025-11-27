@@ -1,333 +1,361 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-  <title>Discipleship Class Dashboard</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <style>
-    body { font-family: Arial; margin: 0; background: #f5f5f5; }
-    .container { max-width: 1000px; margin: auto; background: white; padding: 20px; margin-top: 30px; border-radius: 10px; box-shadow: 0 4px 10px rgba(0,0,0,0.1); }
-    input, button, select { width: 100%; padding: 10px; margin: 6px 0; border-radius: 6px; border: 1px solid #ccc; box-sizing: border-box; }
-    button { background: #2b6cb0; color: white; font-size: 16px; border: none; cursor: pointer; }
-    button:hover { background: #225a90; }
-    .hidden { display: none; }
-    .tab-buttons { display: flex; gap: 10px; margin-bottom: 20px; }
-    .tab-buttons button { flex: 1; }
-    .tab-content { display: none; }
-    .tab-content.active { display: block; }
-    .table-container { overflow-x: auto; margin-top: 20px; }
-    table { width: 100%; border-collapse: collapse; margin-top: 20px; }
-    th, td { padding: 8px; border: 1px solid #ddd; text-align: left; }
-    th { background: #2b6cb0; color: white; cursor: pointer; }
-    td.yes { background: #c6f6d5; color: #22543d; text-align: center; font-weight: bold; cursor:pointer; }
-    td.no { background: #fed7d7; color: #822727; text-align: center; font-weight: bold; cursor:pointer; }
-    .pagination button { margin: 2px; padding: 6px 10px; }
-    #loader { display: none; width: 60px; height: 60px; border: 6px solid #ddd; border-top: 6px solid #2b6cb0; border-radius: 50%; animation: spin 1s linear infinite; margin: 20px auto; }
-    @keyframes spin { 100% { transform: rotate(360deg); } }
-    .input-password { position: relative; }
-    .eye-icon { position: absolute; right: 20px; top: 36px; cursor: pointer; }
-    .adminList { margin-top: 20px; border: 1px solid #ccc; padding: 10px; border-radius: 6px; }
-    .adminList div { display: flex; justify-content: space-between; align-items: center; margin-bottom: 6px; }
-    .number-input { display:flex; align-items:center; gap:5px; }
-    .sheet-link { display:inline-block; background:#2b6cb0; color:white; padding:8px 16px; border-radius:6px; text-decoration:none; margin-bottom:10px; }
-    .sheet-link:hover { background:#225a90; }
-    select { cursor: pointer; }
-  </style>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Discipleship Admin Dashboard</title>
+<style>
+:root{
+  --primary:#2b6cb0; --primary-dark:#225a90;
+  --ok:#c6f6d5; --bad:#fed7d7;
+  --bg:#f5f7fa; --text:#222;
+}
+body{font-family:Arial,sans-serif;margin:0;background:var(--bg);color:var(--text);transition:0.3s;}
+button{cursor:pointer;transition:0.3s;}
+/* Welcome */
+.welcome-wrap{
+  min-height:100vh; display:flex; align-items:center; justify-content:center;
+  background: linear-gradient(270deg,#ff9a9e,#fad0c4,#fbc2eb,#a6c1ee);
+  background-size:800% 800%; animation:gradientBG 15s ease infinite;
+}
+@keyframes gradientBG{0%{background-position:0% 50%;}50%{background-position:100% 50%;}100%{background-position:0% 50%;}}
+.welcome-card{max-width:700px;background:#fff;padding:28px;border-radius:16px;text-align:center;box-shadow:0 12px 30px rgba(0,0,0,0.12);}
+.logo{max-width:140px;margin-bottom:14px;}
+.teacher-img{max-width:220px;border-radius:12px;display:block;margin:14px auto;}
+.btn{display:inline-block;background:var(--primary);color:#fff;border:none;border-radius:8px;padding:0 16px;height:40px;line-height:40px;font-size:15px;}
+.btn:hover{background:var(--primary-dark);}
+
+/* Dashboard */
+.container{max-width:1200px;margin:20px auto;background:#fff;padding:18px;border-radius:10px;box-shadow:0 8px 24px rgba(0,0,0,0.08);}
+input,select,textarea,button{font-family:inherit}
+input,select,textarea{width:100%;padding:10px;margin:6px 0;border-radius:6px;border:1px solid #ccc;box-sizing:border-box;}
+button{height:40px}
+.tab-buttons{display:flex;gap:10px;margin-bottom:16px}
+.tab-buttons button{flex:1;background:#eef5fb;border-radius:6px}
+.tab-buttons button.active{background:var(--primary);color:#fff}
+.tab-content{display:none}
+.tab-content.active{display:block}
+.number-input{display:flex;gap:8px;align-items:center}
+.number-input button{width:44px;padding:0}
+.lessons-row{display:flex;flex-wrap:wrap;gap:10px}
+.lessons-row > div{flex:1 1 160px}
+.table-container{overflow:auto;margin-top:14px;max-height:500px;position:relative}
+table{width:100%;border-collapse:collapse;table-layout:auto;}
+th,td{padding:8px;border:1px solid #e6eef6;text-align:left;white-space:normal;word-break:break-word;transition:0.2s;}
+th{background:var(--primary);color:#fff;position:sticky;top:0;z-index:1;user-select:none;}
+td.yes{background:var(--ok);color:#22543d;text-align:center;font-weight:600;}
+td.no{background:var(--bad);color:#822727;text-align:center;font-weight:600;}
+.selected-row{outline:2px solid #f39c12;transition:0.3s;}
+.highlight{animation:highlightAnim 1s ease;}
+@keyframes highlightAnim{0%{background:#ffff88}50%{background:inherit}100%{background:#ffff88}}
+.admin-list{margin-top:12px;border:1px solid #eee;padding:10px;border-radius:6px}
+.admin-list div{display:flex;justify-content:space-between;align-items:center;padding:6px 0}
+.sheet-link{display:inline-block;background:var(--primary);color:#fff;padding:8px 14px;border-radius:6px;text-decoration:none}
+.search-row{display:flex;gap:8px;align-items:center;margin-bottom:10px}
+.search-row input{flex:1;padding:8px;border-radius:6px;border:1px solid #ccc;}
+.pagination{margin-top:10px;display:flex;gap:6px;flex-wrap:wrap}
+.small-muted{font-size:13px;color:#666}
+/* Eye icon toggle */
+.eye-icon{position:absolute;right:14px;top:35px;cursor:pointer;user-select:none;}
+.position-relative{position:relative}
+/* Dark theme */
+body.dark{background:#121212;color:#f0f0f0}
+body.dark .container{background:#1e1e1e}
+body.dark input,body.dark select,body.dark textarea{background:#2c2c2c;color:#f0f0f0;border:1px solid #555;}
+body.dark table th{background:#333}
+body.dark table td.yes{background:#4caf50;color:#fff}
+body.dark table td.no{background:#f44336;color:#fff}
+body.dark .btn{background:#1976d2;color:#fff}
+body.dark .btn:hover{background:#0d47a1}
+/* Responsive */
+@media(max-width:720px){.lessons-row>div{flex:1 1 100%}}
+</style>
 </head>
 <body>
-<div class="container">
 
-  <h2>Admin Login</h2>
-  <div id="loginSection">
-    <label>Username</label>
-    <input id="adminUser" type="text">
-    <div class="input-password">
-      <label>Password</label>
-      <input id="adminPass" type="password">
-      <span class="eye-icon" onclick="togglePassword()">👁️</span>
-    </div>
-    <button onclick="adminLogin()">Login</button>
+<!-- Welcome -->
+<div id="welcomeView" class="welcome-wrap">
+  <div class="welcome-card">
+    <img src="logo.png" class="logo" alt="Logo">
+    <h1>Welcome to Discipleship Class</h1>
+    <p>Transformative journey of faith.</p>
+    <img src="teacher.jfif" class="teacher-img" alt="Teacher">
+    <button class="btn" id="proceedBtn">Proceed to Admin Login</button>
   </div>
+</div>
 
-  <div id="loader"></div>
+<!-- Dashboard -->
+<div id="dashboardView" class="container" style="display:none">
+<h2>Discipleship Admin Dashboard</h2>
+<button class="btn" onclick="toggleTheme()">Dark/Light</button>
 
-  <div id="adminSection" class="hidden">
-
-    <!-- Link to Google Sheet -->
-    <p>
-      <a href="https://docs.google.com/spreadsheets/d/1FjpVqmpGIX1GlQyXNe6UHn9NwhPvKWV3jXegwPMXUBc/edit?gid=0" target="_blank" class="sheet-link">Open Google Sheet</a>
-    </p>
-
-    <!-- Tabs -->
-    <div class="tab-buttons">
-      <button onclick="showTab('formTab')" class="active" id="formTabBtn">Attendance Form</button>
-      <button onclick="showTab('recordsTab')" id="recordsTabBtn">Student Records</button>
-      <button onclick="showTab('adminsTab')" id="adminsTabBtn">Admin Accounts</button>
-    </div>
-
-    <!-- Attendance Form -->
-    <div id="formTab" class="tab-content active">
-      <h3>Add Attendance</h3>
-      <label>Student Name</label>
-      <input id="studentName" type="text">
-
-      <label>Phone</label>
-      <div class="number-input">
-        <select id="countryCode">
-          <option value="+1">USA +1</option>
-          <option value="+254">Kenya +254</option>
-          <option value="+44">UK +44</option>
-          <option value="+91">India +91</option>
-          <!-- Add more countries as needed -->
-        </select>
-        <input id="studentPhone" type="text" placeholder="Phone number">
-      </div>
-
-      <label>Class Number</label>
-      <div class="number-input">
-        <button type="button" onclick="changeClass(-1)">-</button>
-        <input id="studentClass" type="number" value="1" min="1" max="12">
-        <button type="button" onclick="changeClass(1)">+</button>
-      </div>
-
-      <h4>Lessons Completed</h4>
-      <div id="lessonsContainer"></div>
-
-      <button onclick="addAttendance()">Add Record</button>
-    </div>
-
-    <!-- Student Records Table -->
-    <div id="recordsTab" class="tab-content">
-      <h3>Student Records</h3>
-      <div class="table-container">
-        <table>
-          <thead>
-            <tr>
-              <th>Timestamp</th><th>Student</th><th>Phone</th><th>Class</th>
-              <th>Salvation</th><th>Temptation</th><th>Prayers</th><th>Bible</th>
-              <th>Fellowship</th><th>Witnessing</th><th>Baptism</th><th>HolySpirit</th>
-              <th>Giving</th><th>Deliverance</th><th>Evangelism</th>
-            </tr>
-          </thead>
-          <tbody id="tableBody"></tbody>
-        </table>
-      </div>
-      <div class="pagination" id="paginationControls"></div>
-    </div>
-
-    <!-- Admin Management -->
-    <div id="adminsTab" class="tab-content">
-      <h3>Manage Admin Accounts</h3>
-      <div>
-        <label>New Username</label>
-        <input id="newAdminUser" type="text">
-        <div class="input-password">
-          <label>New Password</label>
-          <input id="newAdminPass" type="password">
-          <span class="eye-icon" onclick="toggleNewPassword()">👁️</span>
-        </div>
-        <button onclick="addAdmin()">Add Admin</button>
-      </div>
-      <div class="adminList" id="adminList"></div>
-    </div>
-
+<!-- Login -->
+<div id="loginSection">
+  <label>Username</label>
+  <input id="adminUser" type="text">
+  <div class="position-relative">
+    <label>Password</label>
+    <input id="adminPass" type="password">
+    <span class="eye-icon" onclick="togglePassword('adminPass')">👁️</span>
   </div>
+  <button onclick="adminLogin()" class="btn">Login</button>
+</div>
+
+<div id="loader" style="display:none;margin:12px auto;width:44px;height:44px;border:5px solid #e6eef6;border-top:5px solid var(--primary);border-radius:50%;animation:spin 1s linear infinite"></div>
+<style>@keyframes spin{100%{transform:rotate(360deg)}}</style>
+
+<div id="adminSection" style="display:none">
+<a class="sheet-link" href="https://docs.google.com/spreadsheets/d/1FjpVqmpGIX1GlQyXNe6UHn9NwhPvKWV3jXegwPMXUBc/edit#gid=0" target="_blank">Open Google Sheet</a>
+
+<div class="search-row">
+  <input id="globalSearchInput" placeholder="Search by name or phone..." oninput="instantSearch()">
+  <button onclick="instantSearch()">Search</button>
+</div>
+
+<div class="tab-buttons">
+  <button id="tabFormBtn" class="active" onclick="showTab('formTab')">Attendance Form</button>
+  <button id="tabRecordsBtn" onclick="showTab('recordsTab')">Student Records</button>
+  <button id="tabAdminsBtn" onclick="showTab('adminsTab')">Admin Accounts</button>
+</div>
+
+<!-- Attendance Form -->
+<div id="formTab" class="tab-content active">
+  <h3>Add / Update Attendance</h3>
+  <label>Student Name</label>
+  <input id="studentName" type="text">
+  <label>Phone</label>
+  <div style="display:flex;gap:8px">
+    <select id="countryCode" style="width:120px"><option value="+254">Kenya +254</option></select>
+    <input id="studentPhone" placeholder="Phone number">
+  </div>
+  <label>Class</label>
+  <div class="number-input">
+    <button onclick="changeClass(-1)">-</button>
+    <input id="studentClass" type="number" min="1" max="12" value="1">
+    <button onclick="changeClass(1)">+</button>
+  </div>
+  <h4>Lessons</h4>
+  <div class="lessons-row" id="lessonsContainer"></div>
+  <div style="display:flex;gap:12px;margin-top:12px">
+    <button onclick="submitAttendance()" class="btn">Submit</button>
+    <button onclick="clearForm()" style="background:#eee;color:#222;border-radius:6px;height:40px">Clear</button>
+    <button onclick="deleteRecord()" style="background:#f44336;color:#fff;border-radius:6px;height:40px">Delete</button>
+  </div>
+</div>
+
+<!-- Student Records -->
+<div id="recordsTab" class="tab-content">
+  <h3>Student Records</h3>
+  <div class="table-container">
+    <table id="recordsTable">
+      <thead>
+        <tr>
+          <th>ID</th><th>Student</th><th>Phone</th><th>Class</th>
+          <th>Salvation</th><th>Temptation</th><th>Prayers</th><th>Bible</th>
+          <th>Fellowship</th><th>Witnessing</th><th>Baptism</th><th>HolySpirit</th>
+          <th>Giving</th><th>Deliverance</th><th>Evangelism</th>
+        </tr>
+      </thead>
+      <tbody id="tableBody"></tbody>
+    </table>
+  </div>
+  <div class="pagination" id="paginationControls"></div>
+</div>
+
+<!-- Admin Accounts -->
+<div id="adminsTab" class="tab-content">
+  <h3>Admin Accounts</h3>
+  <label>New Username</label>
+  <input id="newAdminUser">
+  <label>New Password</label>
+  <div class="position-relative">
+    <input id="newAdminPass" type="password">
+    <span class="eye-icon" onclick="togglePassword('newAdminPass')">👁️</span>
+  </div>
+  <button onclick="addAdmin()" class="btn">Add Admin</button>
+  <div class="admin-list" id="adminList"></div>
+</div>
+
 </div>
 
 <script>
 const SHEETDB_URL = "https://sheetdb.io/api/v1/jsknlsa4eb75w";
+const lessons=["Salvation","Temptation","Prayers","Bible","Fellowship","Witnessing","Baptism","HolySpirit","Giving","Deliverance","Evangelism"];
+let adminAccounts=[{username:"you",password:"254@Discipleship",blocked:false}];
+let allRecords=[],filteredRecords=[],currentPage=1,rowsPerPage=10,selectedRecord=null;
 
-// Admin accounts
-let adminAccounts = [
-  { username:"you", password:"254@Discipleship", blocked:false },
-  { username:"admin2", password:"Admin2Pass", blocked:false }
-];
-
-let allRecords=[], filteredRecords=[], currentPage=1, rowsPerPage=10;
-const lessons = ["Salvation","Temptation","Prayers","Bible","Fellowship","Witnessing","Baptism","HolySpirit","Giving","Deliverance","Evangelism"];
-
-// Populate lessons checkboxes
-const lessonsContainer = document.getElementById("lessonsContainer");
-lessons.forEach(lesson => {
-  const div = document.createElement("div");
-  div.innerHTML = `<label>${lesson}: <select data-lesson="${lesson}"><option value="no">No</option><option value="yes">Yes</option></select></label>`;
-  lessonsContainer.appendChild(div);
+// Populate lessons
+lessons.forEach(l=>{
+  const wrap=document.createElement('div');
+  wrap.innerHTML=`<label style="font-weight:600">${l}:</label>
+  <select data-lesson="${l}"><option value="no">No</option><option value="yes">Yes</option></select>`;
+  document.getElementById('lessonsContainer').appendChild(wrap);
 });
 
-// Toggle password visibility
-function togglePassword(){ document.getElementById("adminPass").type = document.getElementById("adminPass").type==="password"?"text":"password";}
-function toggleNewPassword(){ document.getElementById("newAdminPass").type = document.getElementById("newAdminPass").type==="password"?"text":"password";}
+// Helpers
+function togglePassword(id){const i=document.getElementById(id);i.type=(i.type==='password')?'text':'password';}
+function toggleTheme(){document.body.classList.toggle('dark');}
+function showLoader(show){document.getElementById('loader').style.display=show?'block':'none';}
+function changeClass(delta){
+  const input=document.getElementById('studentClass');
+  let v=parseInt(input.value||'1',10);v+=delta;if(v<1)v=1;if(v>12)v=12;input.value=v;
+}
+function showTab(id){
+  document.querySelectorAll('.tab-content').forEach(c=>c.classList.remove('active'));
+  document.getElementById(id).classList.add('active');
+  document.querySelectorAll('.tab-buttons button').forEach(b=>b.classList.remove('active'));
+  if(id==='formTab')document.getElementById('tabFormBtn').classList.add('active');
+  else if(id==='recordsTab')document.getElementById('tabRecordsBtn').classList.add('active');
+  else if(id==='adminsTab')document.getElementById('tabAdminsBtn').classList.add('active');
+}
 
-// Login
+// Admin login
+document.getElementById('proceedBtn').addEventListener('click',()=>{
+  document.getElementById('welcomeView').style.display='none';
+  document.getElementById('dashboardView').style.display='block';
+  document.getElementById('loginSection').style.display='block';
+});
 function adminLogin(){
-  const u = document.getElementById("adminUser").value;
-  const p = document.getElementById("adminPass").value;
-  const admin = adminAccounts.find(a => a.username===u && a.password===p);
-  if(!admin){ alert("Wrong credentials"); return; }
-  if(admin.blocked){ alert("Access denied. You are blocked."); return; }
-  document.getElementById("loginSection").style.display="none";
+  const u=document.getElementById('adminUser').value.trim();
+  const p=document.getElementById('adminPass').value;
+  const admin=adminAccounts.find(a=>a.username===u && a.password===p);
+  if(!admin){alert('Wrong credentials');return;}
+  if(admin.blocked){alert('Blocked');return;}
+  document.getElementById('loginSection').style.display='none';
+  document.getElementById('adminSection').style.display='block';
   loadAllRecords();
 }
 
-// Load records
-function loadAllRecords(){
+// Fetch & table
+async function loadAllRecords(){
   showLoader(true);
-  fetch(SHEETDB_URL)
-    .then(r=>r.json())
-    .then(data=>{
-      showLoader(false);
-      allRecords = data;
-      filteredRecords = allRecords;
-      document.getElementById("adminSection").classList.remove("hidden");
-      renderTable();
-      renderAdminList();
-    })
-    .catch(()=>{ showLoader(false); alert("Error loading records"); });
+  try{
+    const res=await fetch(SHEETDB_URL);
+    if(!res.ok)throw new Error("Network error");
+    const data=await res.json();
+    allRecords=Array.isArray(data)?data.map(d=>({id:d.id||d.Timestamp,...d})):[]; 
+    filteredRecords=allRecords.slice();
+    currentPage=1;
+    renderTable();
+  }catch(e){console.error(e);alert('Failed to load data');}finally{showLoader(false);}
 }
 
-// Show loader
-function showLoader(show){ document.getElementById("loader").style.display=show?"block":"none"; }
-
-// Tab switching
-function showTab(tabId){
-  document.querySelectorAll(".tab-content").forEach(c=>c.classList.remove("active"));
-  document.getElementById(tabId).classList.add("active");
-  document.querySelectorAll(".tab-buttons button").forEach(b=>b.classList.remove("active"));
-  document.getElementById(tabId+"Btn").classList.add("active");
-}
-
-// Attendance: change class number
-function changeClass(delta){
-  const input = document.getElementById("studentClass");
-  let val = parseInt(input.value)||1;
-  val += delta;
-  if(val<1) val=1;
-  if(val>12) val=12;
-  input.value = val;
-}
-
-// Attendance: add record
-function addAttendance(){
-  const name = document.getElementById("studentName").value.trim();
-  const phone = document.getElementById("countryCode").value + document.getElementById("studentPhone").value.trim();
-  const cls = document.getElementById("studentClass").value;
-  if(!name || !phone || !cls){ alert("All fields required"); return; }
-
-  const lessonValues = {};
-  lessons.forEach(lesson => {
-    const val = document.querySelector(`select[data-lesson="${lesson}"]`).value;
-    lessonValues[lesson] = val;
-  });
-
-  const payload = { Timestamp: new Date().toISOString(), Student:name, Phone:phone, Class:cls, ...lessonValues };
-
-  fetch(SHEETDB_URL, {
-    method:"POST",
-    headers: {"Content-Type":"application/json"},
-    body: JSON.stringify(payload)
-  }).then(()=> {
-    alert("Record added!");
-    document.getElementById("studentName").value="";
-    document.getElementById("studentPhone").value="";
-    document.getElementById("studentClass").value="1";
-    lessons.forEach(lesson => document.querySelector(`select[data-lesson="${lesson}"]`).value="no");
-    loadAllRecords();
-  }).catch(()=>alert("Error adding record"));
-}
-
-// Render table
 function renderTable(){
-  const tb=document.getElementById("tableBody");
-  tb.innerHTML="";
+  const tbody=document.getElementById('tableBody');tbody.innerHTML='';
   const start=(currentPage-1)*rowsPerPage;
   const pageRecords=filteredRecords.slice(start,start+rowsPerPage);
   pageRecords.forEach(r=>{
-    let tr=document.createElement("tr");
-    Object.keys(r).forEach(k=>{
-      let td=document.createElement("td");
-      td.textContent = r[k];
-      if(lessons.includes(k)){
-        td.className = r[k]==="yes"?"yes":"no";
-        td.onclick = ()=>{ toggleYesNo(td, r, k); }
-      } else if(k==="Class") {
-        td.style.cursor="pointer";
-        td.onclick = ()=>{ 
-          const newClass = prompt("Edit Class Number", td.textContent); 
-          if(newClass) updateRecord(r, "Class", newClass); 
-        };
-      } else if(k==="Student" || k==="Phone"){
-        td.style.cursor="pointer";
-        td.onclick = ()=>{ 
-          const newVal = prompt(`Edit ${k}`, td.textContent); 
-          if(newVal) updateRecord(r, k, newVal);
-        };
-      }
+    const tr=document.createElement('tr');tr.style.pointerEvents='auto';
+    const keys=['id','Student','Phone','Class',...lessons];
+    keys.forEach(k=>{
+      const td=document.createElement('td');
+      td.textContent=r[k]||'';
+      if(lessons.includes(k)) td.className=(r[k]==='yes')?'yes':'no';
       tr.appendChild(td);
     });
-    tb.appendChild(tr);
+    tr.addEventListener('click',()=>loadRecordIntoForm(r,tr));
+    tbody.appendChild(tr);
   });
   renderPagination();
 }
 
-// Toggle Yes/No
-function toggleYesNo(td,row,key){
-  const newVal = td.textContent==="yes"?"no":"yes";
-  td.textContent = newVal;
-  td.className = newVal==="yes"?"yes":"no";
-  updateRecord(row,key,newVal);
-}
-
-// Update record in SheetDB
-function updateRecord(row, key, value){
-  fetch(`${SHEETDB_URL}?Student=${encodeURIComponent(row.Student)}&Phone=${encodeURIComponent(row.Phone)}`,{
-    method:"PATCH",
-    headers:{ "Content-Type":"application/json" },
-    body: JSON.stringify({ [key]:value })
-  }).then(()=> loadAllRecords());
+function loadRecordIntoForm(r,tr){
+  selectedRecord=r;
+  document.querySelectorAll('#tableBody tr').forEach(row=>row.classList.remove('selected-row'));
+  if(tr) tr.classList.add('selected-row');
+  document.getElementById('studentName').value=r.Student||'';
+  document.getElementById('studentPhone').value=r.Phone||'';
+  document.getElementById('studentClass').value=r.Class||1;
+  lessons.forEach(l=>{document.querySelector(`select[data-lesson="${l}"]`).value=r[l]||'no';});
+  showTab('formTab');
+  if(tr) tr.scrollIntoView({behavior:'smooth',block:'center'});
 }
 
 // Pagination
 function renderPagination(){
+  const container=document.getElementById('paginationControls'); container.innerHTML='';
   const totalPages=Math.ceil(filteredRecords.length/rowsPerPage);
-  const p=document.getElementById("paginationControls"); p.innerHTML="";
-  if(totalPages<2) return;
-  let prev=document.createElement("button"); prev.textContent="Prev"; prev.disabled=currentPage===1; prev.onclick=()=>{currentPage--; renderTable();}; p.appendChild(prev);
-  for(let i=1;i<=totalPages;i++){
-    let b=document.createElement("button"); b.textContent=i; b.disabled=i===currentPage; b.onclick=()=>{currentPage=i; renderTable();};
-    p.appendChild(b);
+  if(totalPages<=1) return;
+  if(currentPage>1){
+    const prev=document.createElement('button'); prev.textContent='Prev';
+    prev.onclick=()=>{currentPage--;renderTable();}
+    container.appendChild(prev);
   }
-  let next=document.createElement("button"); next.textContent="Next"; next.disabled=currentPage===totalPages; next.onclick=()=>{currentPage++; renderTable();};
-  p.appendChild(next);
+  if(currentPage<totalPages){
+    const next=document.createElement('button'); next.textContent='Next';
+    next.onclick=()=>{currentPage++;renderTable();}
+    container.appendChild(next);
+  }
+}
+
+// Instant search + highlight
+function instantSearch(){
+  const val=document.getElementById('globalSearchInput').value.toLowerCase();
+  filteredRecords=allRecords.filter(r=>(r.Student?.toLowerCase().includes(val)||r.Phone?.toLowerCase().includes(val)));
+  currentPage=1;
+  renderTable();
+}
+
+// Form actions
+async function submitAttendance(){
+  const student = document.getElementById('studentName').value.trim();
+  const phone = document.getElementById('studentPhone').value.trim();
+  const studentClass = document.getElementById('studentClass').value;
+  if(!student||!phone) return alert('Enter student name and phone');
+  const lessonData = {};
+  lessons.forEach(l=>{lessonData[l]=document.querySelector(`select[data-lesson="${l}"]`).value;});
+  if(!selectedRecord){
+    const newData={id:Date.now(),Student:student,Phone:phone,Class:studentClass,...lessonData};
+    await fetch(SHEETDB_URL,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({data:newData})});
+    alert('Added new record');
+  }else{
+    const updated={Student:student,Phone:phone,Class:studentClass,...lessonData};
+    await fetch(`${SHEETDB_URL}/id/${selectedRecord.id}`,{method:'PATCH',headers:{'Content-Type':'application/json'},body:JSON.stringify({data:updated})});
+    alert('Updated record');
+  }
+  clearForm(); loadAllRecords();
+}
+
+async function deleteRecord(){
+  if(!selectedRecord) return alert('Select a record first');
+  if(confirm('Are you sure you want to delete this record?')){
+    await fetch(`${SHEETDB_URL}/id/${selectedRecord.id}`,{method:'DELETE'});
+    alert('Deleted');
+    clearForm(); loadAllRecords();
+  }
+}
+
+function clearForm(){
+  selectedRecord=null;
+  document.getElementById('studentName').value='';
+  document.getElementById('studentPhone').value='';
+  document.getElementById('studentClass').value='1';
+  lessons.forEach(l=>{document.querySelector(`select[data-lesson="${l}"]`).value='no';});
 }
 
 // Admin management
+function addAdmin(){
+  const u=document.getElementById('newAdminUser').value.trim();
+  const p=document.getElementById('newAdminPass').value;
+  if(!u||!p) return alert('Enter username and password');
+  adminAccounts.push({username:u,password:p,blocked:false});
+  renderAdminList();
+}
 function renderAdminList(){
-  const container=document.getElementById("adminList");
-  container.innerHTML="";
-  adminAccounts.forEach((a,index)=>{
-    const div=document.createElement("div");
-    div.innerHTML=`<span>${a.username} ${a.blocked?"(Blocked)":"(Active)"}</span>`;
-    const blockBtn=document.createElement("button"); blockBtn.textContent=a.blocked?"Unblock":"Block"; blockBtn.onclick=()=>{ a.blocked=!a.blocked; renderAdminList(); };
-    const changePassBtn=document.createElement("button"); changePassBtn.textContent="Change Password"; changePassBtn.onclick=()=>{ changePassword(index); };
-    div.appendChild(blockBtn); div.appendChild(changePassBtn);
+  const container=document.getElementById('adminList'); container.innerHTML='';
+  adminAccounts.forEach((a,i)=>{
+    const div=document.createElement('div'); div.innerHTML=`<span>${a.username}</span>`;
+    const btn=document.createElement('button'); btn.textContent=a.blocked?'Unblock':'Block';
+    btn.onclick=()=>{a.blocked=!a.blocked;renderAdminList();}
+    div.appendChild(btn);
     container.appendChild(div);
   });
 }
+renderAdminList();
 
-function addAdmin(){
-  const u=document.getElementById("newAdminUser").value.trim();
-  const p=document.getElementById("newAdminPass").value.trim();
-  if(!u || !p){alert("Enter username & password"); return;}
-  adminAccounts.push({username:u,password:p,blocked:false});
-  renderAdminList();
-  document.getElementById("newAdminUser").value="";
-  document.getElementById("newAdminPass").value="";
-}
-
-function changePassword(index){
-  const newPass = prompt("Enter new password for "+adminAccounts[index].username);
-  if(newPass) adminAccounts[index].password=newPass;
-  renderAdminList();
-}
+// Auto-refresh every 10s
+setInterval(()=>{if(document.getElementById('adminSection').style.display==='block') loadAllRecords();},10000);
 </script>
+
 </body>
 </html>
