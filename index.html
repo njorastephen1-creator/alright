@@ -12,25 +12,39 @@
 }
 body{font-family:Arial,sans-serif;margin:0;background:var(--bg);color:var(--text);transition:0.3s;}
 button{cursor:pointer;transition:0.3s;}
-/* Welcome */
+
+/* Welcome Page */
 .welcome-wrap{
   min-height:100vh; display:flex; align-items:center; justify-content:center;
   background: linear-gradient(270deg,#ff9a9e,#fad0c4,#fbc2eb,#a6c1ee);
   background-size:800% 800%; animation:gradientBG 15s ease infinite;
 }
-@keyframes gradientBG{0%{background-position:0% 50%;}50%{background-position:100% 50%;}100%{background-position:0% 50%;}}
-.welcome-card{max-width:700px;background:#fff;padding:28px;border-radius:16px;text-align:center;box-shadow:0 12px 30px rgba(0,0,0,0.12);}
+@keyframes gradientBG{
+  0%{background-position:0% 50%;}
+  50%{background-position:100% 50%;}
+  100%{background-position:0% 50%;}
+}
+.welcome-card{
+  max-width:700px;background:#fff;padding:28px;border-radius:16px;
+  text-align:center;box-shadow:0 12px 30px rgba(0,0,0,0.12);
+}
 .logo{max-width:140px;margin-bottom:14px;}
 .teacher-img{max-width:220px;border-radius:12px;display:block;margin:14px auto;}
 .btn{display:inline-block;background:var(--primary);color:#fff;border:none;border-radius:8px;padding:0 16px;height:40px;line-height:40px;font-size:15px;}
 .btn:hover{background:var(--primary-dark);}
+
+/* Welcome Text Animation */
+.welcome-title{font-size:22px;font-weight:700;color:#2b3a55;margin-bottom:8px;opacity:0;animation:fadeUp 1.2s ease forwards;}
+.welcome-sub{font-size:14px;color:#444;margin-bottom:10px;line-height:1.5;opacity:0;animation:fadeUp 1.2s ease forwards;animation-delay:0.3s;}
+.welcome-verse{font-size:13px;font-style:italic;color:#333;opacity:0;animation:fadeUp 1.2s ease forwards;animation-delay:0.6s;}
+@keyframes fadeUp{0%{opacity:0;transform:translateY(12px);}100%{opacity:1;transform:translateY(0);}}
 
 /* Dashboard */
 .container{max-width:1200px;margin:20px auto;background:#fff;padding:18px;border-radius:10px;box-shadow:0 8px 24px rgba(0,0,0,0.08);}
 input,select,textarea,button{font-family:inherit}
 input,select,textarea{width:100%;padding:10px;margin:6px 0;border-radius:6px;border:1px solid #ccc;box-sizing:border-box;}
 button{height:40px}
-.tab-buttons{display:flex;gap:10px;margin-bottom:16px}
+.tab-buttons{display:flex;gap:10px;margin-bottom:16px;flex-wrap:wrap}
 .tab-buttons button{flex:1;background:#eef5fb;border-radius:6px}
 .tab-buttons button.active{background:var(--primary);color:#fff}
 .tab-content{display:none}
@@ -39,25 +53,26 @@ button{height:40px}
 .number-input button{width:44px;padding:0}
 .lessons-row{display:flex;flex-wrap:wrap;gap:10px}
 .lessons-row > div{flex:1 1 160px}
-.table-container{overflow:auto;margin-top:14px;max-height:500px;position:relative}
-table{width:100%;border-collapse:collapse;table-layout:auto;}
-th,td{padding:8px;border:1px solid #e6eef6;text-align:left;white-space:normal;word-break:break-word;transition:0.2s;}
+.table-container{overflow:auto;margin-top:14px;max-height:500px;position:relative;}
+table{width:100%;border-collapse:collapse;table-layout:auto;margin-bottom:20px;min-width:800px;}
+th,td{padding:8px;border:1px solid #e6eef6;text-align:left;white-space:nowrap;word-break:normal;}
 th{background:var(--primary);color:#fff;position:sticky;top:0;z-index:1;user-select:none;}
 td.yes{background:var(--ok);color:#22543d;text-align:center;font-weight:600;}
 td.no{background:var(--bad);color:#822727;text-align:center;font-weight:600;}
-.selected-row{outline:2px solid #f39c12;transition:0.3s;}
-.highlight{animation:highlightAnim 1s ease;}
-@keyframes highlightAnim{0%{background:#ffff88}50%{background:inherit}100%{background:#ffff88}}
+.selected-row{outline:2px solid #ff9800; transition:0.3s;}
+.highlight{background-color:#fff9c4;}
 .admin-list{margin-top:12px;border:1px solid #eee;padding:10px;border-radius:6px}
 .admin-list div{display:flex;justify-content:space-between;align-items:center;padding:6px 0}
-.sheet-link{display:inline-block;background:var(--primary);color:#fff;padding:8px 14px;border-radius:6px;text-decoration:none}
 .search-row{display:flex;gap:8px;align-items:center;margin-bottom:10px}
 .search-row input{flex:1;padding:8px;border-radius:6px;border:1px solid #ccc;}
 .pagination{margin-top:10px;display:flex;gap:6px;flex-wrap:wrap}
 .small-muted{font-size:13px;color:#666}
-/* Eye icon toggle */
 .eye-icon{position:absolute;right:14px;top:35px;cursor:pointer;user-select:none;}
 .position-relative{position:relative}
+
+/* Highlight matching text inside cells */
+#recordsContainer td .match { background-color: #ffff00; font-weight: 600; border-radius: 2px; padding: 0 2px; }
+
 /* Dark theme */
 body.dark{background:#121212;color:#f0f0f0}
 body.dark .container{background:#1e1e1e}
@@ -67,6 +82,7 @@ body.dark table td.yes{background:#4caf50;color:#fff}
 body.dark table td.no{background:#f44336;color:#fff}
 body.dark .btn{background:#1976d2;color:#fff}
 body.dark .btn:hover{background:#0d47a1}
+
 /* Responsive */
 @media(max-width:720px){.lessons-row>div{flex:1 1 100%}}
 </style>
@@ -77,8 +93,14 @@ body.dark .btn:hover{background:#0d47a1}
 <div id="welcomeView" class="welcome-wrap">
   <div class="welcome-card">
     <img src="logo.png" class="logo" alt="Logo">
-    <h1>Welcome to Discipleship Class</h1>
-    <p>Transformative journey of faith.</p>
+    <h2 class="welcome-title">Welcome to Your Spiritual Home</h2>
+    <p class="welcome-sub">
+      Grow in faith, walk with purpose, and discover God’s calling for your life.
+      This platform helps you build disciples, track growth, and strengthen your ministry.
+    </p>
+    <p class="welcome-verse">
+      “Your word is a lamp to my feet and a light to my path.” – Psalm 119:105
+    </p>
     <img src="teacher.jfif" class="teacher-img" alt="Teacher">
     <button class="btn" id="proceedBtn">Proceed to Admin Login</button>
   </div>
@@ -90,7 +112,7 @@ body.dark .btn:hover{background:#0d47a1}
 <button class="btn" onclick="toggleTheme()">Dark/Light</button>
 
 <!-- Login -->
-<div id="loginSection">
+<div id="loginSection" style="display:none">
   <label>Username</label>
   <input id="adminUser" type="text">
   <div class="position-relative">
@@ -101,101 +123,85 @@ body.dark .btn:hover{background:#0d47a1}
   <button onclick="adminLogin()" class="btn">Login</button>
 </div>
 
-<div id="loader" style="display:none;margin:12px auto;width:44px;height:44px;border:5px solid #e6eef6;border-top:5px solid var(--primary);border-radius:50%;animation:spin 1s linear infinite"></div>
-<style>@keyframes spin{100%{transform:rotate(360deg)}}</style>
-
 <div id="adminSection" style="display:none">
-<a class="sheet-link" href="https://docs.google.com/spreadsheets/d/1FjpVqmpGIX1GlQyXNe6UHn9NwhPvKWV3jXegwPMXUBc/edit#gid=0" target="_blank">Open Google Sheet</a>
-
-<div class="search-row">
-  <input id="globalSearchInput" placeholder="Search by name or phone..." oninput="instantSearch()">
-  <button onclick="instantSearch()">Search</button>
-</div>
-
-<div class="tab-buttons">
-  <button id="tabFormBtn" class="active" onclick="showTab('formTab')">Attendance Form</button>
-  <button id="tabRecordsBtn" onclick="showTab('recordsTab')">Student Records</button>
-  <button id="tabAdminsBtn" onclick="showTab('adminsTab')">Admin Accounts</button>
-</div>
-
-<!-- Attendance Form -->
-<div id="formTab" class="tab-content active">
-  <h3>Add / Update Attendance</h3>
-  <label>Student Name</label>
-  <input id="studentName" type="text">
-  <label>Phone</label>
-  <div style="display:flex;gap:8px">
-    <select id="countryCode" style="width:120px"><option value="+254">Kenya +254</option></select>
-    <input id="studentPhone" placeholder="Phone number">
+  <div class="search-row">
+    <input id="globalSearchInput" placeholder="Search by name or phone..." oninput="loadRecords()">
   </div>
-  <label>Class</label>
-  <div class="number-input">
-    <button onclick="changeClass(-1)">-</button>
-    <input id="studentClass" type="number" min="1" max="12" value="1">
-    <button onclick="changeClass(1)">+</button>
+  <div class="tab-buttons">
+    <button id="tabFormBtn" class="active" onclick="showTab('formTab')">Attendance Form</button>
+    <button id="tabRecordsBtn" onclick="showTab('recordsTab')">Student Records</button>
+    <button id="tabAdminsBtn" onclick="showTab('adminsTab')">Admin Accounts</button>
   </div>
-  <h4>Lessons</h4>
-  <div class="lessons-row" id="lessonsContainer"></div>
-  <div style="display:flex;gap:12px;margin-top:12px">
-    <button onclick="submitAttendance()" class="btn">Submit</button>
-    <button onclick="clearForm()" style="background:#eee;color:#222;border-radius:6px;height:40px">Clear</button>
-    <button onclick="deleteRecord()" style="background:#f44336;color:#fff;border-radius:6px;height:40px">Delete</button>
-  </div>
-</div>
 
-<!-- Student Records -->
-<div id="recordsTab" class="tab-content">
-  <h3>Student Records</h3>
-  <div class="table-container">
-    <table id="recordsTable">
-      <thead>
-        <tr>
-          <th>ID</th><th>Student</th><th>Phone</th><th>Class</th>
-          <th>Salvation</th><th>Temptation</th><th>Prayers</th><th>Bible</th>
-          <th>Fellowship</th><th>Witnessing</th><th>Baptism</th><th>HolySpirit</th>
-          <th>Giving</th><th>Deliverance</th><th>Evangelism</th>
-        </tr>
-      </thead>
-      <tbody id="tableBody"></tbody>
-    </table>
+  <!-- Attendance Form -->
+  <div id="formTab" class="tab-content active">
+    <h3>Add / Update Attendance</h3>
+    <label>Student Name</label>
+    <input id="studentName" type="text">
+    <label>Phone</label>
+    <div style="display:flex;gap:8px">
+      <select id="countryCode" style="width:120px">
+        <option value="+254">Kenya +254</option>
+        <option value="+1">USA +1</option>
+        <option value="+44">UK +44</option>
+        <option value="+91">India +91</option>
+        <option value="+234">Nigeria +234</option>
+      </select>
+      <input id="studentPhone" placeholder="Phone number">
+    </div>
+    <label>Class No.</label>
+    <div class="number-input">
+      <button onclick="changeClass(-1)">-</button>
+      <input id="studentClass" type="number" min="1" max="12" value="1">
+      <button onclick="changeClass(1)">+</button>
+    </div>
+    <h4>Lessons</h4>
+    <div class="lessons-row" id="lessonsContainer"></div>
+    <div style="display:flex;gap:12px;margin-top:12px">
+      <button onclick="submitAttendance()" class="btn">Submit</button>
+      <button onclick="clearForm()" style="background:#eee;color:#222;border-radius:6px;height:40px">Clear</button>
+      <button onclick="deleteRecord()" style="background:#f44336;color:#fff;border-radius:6px;height:40px">Delete</button>
+    </div>
   </div>
-  <div class="pagination" id="paginationControls"></div>
-</div>
 
-<!-- Admin Accounts -->
-<div id="adminsTab" class="tab-content">
-  <h3>Admin Accounts</h3>
-  <label>New Username</label>
-  <input id="newAdminUser">
-  <label>New Password</label>
-  <div class="position-relative">
-    <input id="newAdminPass" type="password">
-    <span class="eye-icon" onclick="togglePassword('newAdminPass')">👁️</span>
+  <!-- Student Records -->
+  <div id="recordsTab" class="tab-content">
+    <h3>Student Records</h3>
+    <div id="recordsContainer" class="table-container"></div>
   </div>
-  <button onclick="addAdmin()" class="btn">Add Admin</button>
-  <div class="admin-list" id="adminList"></div>
-</div>
 
+  <!-- Admin Accounts -->
+  <div id="adminsTab" class="tab-content">
+    <h3>Admin Accounts</h3>
+    <label>New Username</label>
+    <input id="newAdminUser">
+    <label>New Password</label>
+    <div class="position-relative">
+      <input id="newAdminPass" type="password">
+      <span class="eye-icon" onclick="togglePassword('newAdminPass')">👁️</span>
+    </div>
+    <button onclick="addAdmin()" class="btn">Add Admin</button>
+    <div class="admin-list" id="adminList"></div>
+  </div>
 </div>
 
 <script>
-const SHEETDB_URL = "https://sheetdb.io/api/v1/jsknlsa4eb75w";
-const lessons=["Salvation","Temptation","Prayers","Bible","Fellowship","Witnessing","Baptism","HolySpirit","Giving","Deliverance","Evangelism"];
-let adminAccounts=[{username:"you",password:"254@Discipleship",blocked:false}];
-let allRecords=[],filteredRecords=[],currentPage=1,rowsPerPage=10,selectedRecord=null;
-
-// Populate lessons
+// Lessons
+const lessons=["Salvation","Temptation","Prayers","Bible","Fellowhip","Witnessing","Baptism","HolySpirit","Giving","Deliverance","Evangelism"];
 lessons.forEach(l=>{
   const wrap=document.createElement('div');
   wrap.innerHTML=`<label style="font-weight:600">${l}:</label>
-  <select data-lesson="${l}"><option value="no">No</option><option value="yes">Yes</option></select>`;
+  <select data-lesson="${l}">
+    <option value="no">No</option>
+    <option value="yes">Yes</option>
+  </select>`;
   document.getElementById('lessonsContainer').appendChild(wrap);
 });
 
 // Helpers
+let db, selectedRecord=null;
 function togglePassword(id){const i=document.getElementById(id);i.type=(i.type==='password')?'text':'password';}
 function toggleTheme(){document.body.classList.toggle('dark');}
-function showLoader(show){document.getElementById('loader').style.display=show?'block':'none';}
 function changeClass(delta){
   const input=document.getElementById('studentClass');
   let v=parseInt(input.value||'1',10);v+=delta;if(v<1)v=1;if(v>12)v=12;input.value=v;
@@ -209,122 +215,84 @@ function showTab(id){
   else if(id==='adminsTab')document.getElementById('tabAdminsBtn').classList.add('active');
 }
 
-// Admin login
+// Show dashboard after DB ready
 document.getElementById('proceedBtn').addEventListener('click',()=>{
   document.getElementById('welcomeView').style.display='none';
   document.getElementById('dashboardView').style.display='block';
-  document.getElementById('loginSection').style.display='block';
 });
+
+// IndexedDB setup
+const request = indexedDB.open('DiscipleshipDB',1);
+request.onupgradeneeded = e=>{
+  db=e.target.result;
+  db.createObjectStore('attendance',{keyPath:'id',autoIncrement:true});
+  db.createObjectStore('admins',{keyPath:'username'});
+};
+request.onsuccess = e=>{
+  db=e.target.result;
+  loadAdmins().then(()=>{
+    document.getElementById('loginSection').style.display='block';
+  });
+};
+
+function loadAdmins(){
+  return new Promise(resolve=>{
+    const tx = db.transaction('admins','readonly').objectStore('admins');
+    tx.getAll().onsuccess = e => {
+      const admins = e.target.result;
+      if(!admins.find(a=>a.username==='admin')){
+        const wtx = db.transaction('admins','readwrite').objectStore('admins');
+        wtx.add({username:'admin',password:'254@Discipleship',blocked:false}).onsuccess=()=>resolve();
+      } else resolve();
+      renderAdminList();
+    };
+  });
+}
+
+// Admin login
 function adminLogin(){
   const u=document.getElementById('adminUser').value.trim();
   const p=document.getElementById('adminPass').value;
-  const admin=adminAccounts.find(a=>a.username===u && a.password===p);
-  if(!admin){alert('Wrong credentials');return;}
-  if(admin.blocked){alert('Blocked');return;}
-  document.getElementById('loginSection').style.display='none';
-  document.getElementById('adminSection').style.display='block';
-  loadAllRecords();
+  if(!u||!p){alert('Enter credentials'); return;}
+  const tx=db.transaction('admins','readonly').objectStore('admins');
+  tx.get(u).onsuccess=e=>{
+    const admin=e.target.result;
+    if(!admin || admin.password!==p){alert('Wrong credentials'); return;}
+    if(admin.blocked){alert('Blocked'); return;}
+    document.getElementById('loginSection').style.display='none';
+    document.getElementById('adminSection').style.display='block';
+    loadRecords();
+  };
 }
 
-// Fetch & table
-async function loadAllRecords(){
-  showLoader(true);
-  try{
-    const res=await fetch(SHEETDB_URL);
-    if(!res.ok)throw new Error("Network error");
-    const data=await res.json();
-    allRecords=Array.isArray(data)?data.map(d=>({id:d.id||d.Timestamp,...d})):[]; 
-    filteredRecords=allRecords.slice();
-    currentPage=1;
-    renderTable();
-  }catch(e){console.error(e);alert('Failed to load data');}finally{showLoader(false);}
-}
-
-function renderTable(){
-  const tbody=document.getElementById('tableBody');tbody.innerHTML='';
-  const start=(currentPage-1)*rowsPerPage;
-  const pageRecords=filteredRecords.slice(start,start+rowsPerPage);
-  pageRecords.forEach(r=>{
-    const tr=document.createElement('tr');tr.style.pointerEvents='auto';
-    const keys=['id','Student','Phone','Class',...lessons];
-    keys.forEach(k=>{
-      const td=document.createElement('td');
-      td.textContent=r[k]||'';
-      if(lessons.includes(k)) td.className=(r[k]==='yes')?'yes':'no';
-      tr.appendChild(td);
-    });
-    tr.addEventListener('click',()=>loadRecordIntoForm(r,tr));
-    tbody.appendChild(tr);
-  });
-  renderPagination();
-}
-
-function loadRecordIntoForm(r,tr){
-  selectedRecord=r;
-  document.querySelectorAll('#tableBody tr').forEach(row=>row.classList.remove('selected-row'));
-  if(tr) tr.classList.add('selected-row');
-  document.getElementById('studentName').value=r.Student||'';
-  document.getElementById('studentPhone').value=r.Phone||'';
-  document.getElementById('studentClass').value=r.Class||1;
-  lessons.forEach(l=>{document.querySelector(`select[data-lesson="${l}"]`).value=r[l]||'no';});
-  showTab('formTab');
-  if(tr) tr.scrollIntoView({behavior:'smooth',block:'center'});
-}
-
-// Pagination
-function renderPagination(){
-  const container=document.getElementById('paginationControls'); container.innerHTML='';
-  const totalPages=Math.ceil(filteredRecords.length/rowsPerPage);
-  if(totalPages<=1) return;
-  if(currentPage>1){
-    const prev=document.createElement('button'); prev.textContent='Prev';
-    prev.onclick=()=>{currentPage--;renderTable();}
-    container.appendChild(prev);
-  }
-  if(currentPage<totalPages){
-    const next=document.createElement('button'); next.textContent='Next';
-    next.onclick=()=>{currentPage++;renderTable();}
-    container.appendChild(next);
-  }
-}
-
-// Instant search + highlight
-function instantSearch(){
-  const val=document.getElementById('globalSearchInput').value.toLowerCase();
-  filteredRecords=allRecords.filter(r=>(r.Student?.toLowerCase().includes(val)||r.Phone?.toLowerCase().includes(val)));
-  currentPage=1;
-  renderTable();
-}
-
-// Form actions
-async function submitAttendance(){
-  const student = document.getElementById('studentName').value.trim();
-  const phone = document.getElementById('studentPhone').value.trim();
-  const studentClass = document.getElementById('studentClass').value;
-  if(!student||!phone) return alert('Enter student name and phone');
-  const lessonData = {};
+// Attendance CRUD
+function submitAttendance(){
+  const student=document.getElementById('studentName').value.trim();
+  const phone=document.getElementById('studentPhone').value.trim();
+  const countryCode=document.getElementById('countryCode').value;
+  const studentClass=document.getElementById('studentClass').value;
+  if(!student||!phone){alert('Enter student name and phone');return;}
+  const lessonData={};
   lessons.forEach(l=>{lessonData[l]=document.querySelector(`select[data-lesson="${l}"]`).value;});
+  const tx=db.transaction('attendance','readwrite');
+  const store=tx.objectStore('attendance');
   if(!selectedRecord){
-    const newData={id:Date.now(),Student:student,Phone:phone,Class:studentClass,...lessonData};
-    await fetch(SHEETDB_URL,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({data:newData})});
-    alert('Added new record');
-  }else{
-    const updated={Student:student,Phone:phone,Class:studentClass,...lessonData};
-    await fetch(`${SHEETDB_URL}/id/${selectedRecord.id}`,{method:'PATCH',headers:{'Content-Type':'application/json'},body:JSON.stringify({data:updated})});
-    alert('Updated record');
-  }
-  clearForm(); loadAllRecords();
-}
-
-async function deleteRecord(){
-  if(!selectedRecord) return alert('Select a record first');
-  if(confirm('Are you sure you want to delete this record?')){
-    await fetch(`${SHEETDB_URL}/id/${selectedRecord.id}`,{method:'DELETE'});
-    alert('Deleted');
-    clearForm(); loadAllRecords();
+    store.add({Student:student,Phone:countryCode+phone,"Class No.":studentClass,...lessonData}).onsuccess=()=>{alert('Submitted'); loadRecords(); clearForm();};
+  } else {
+    store.put({id:selectedRecord.id,Student:student,Phone:countryCode+phone,"Class No.":studentClass,...lessonData}).onsuccess=()=>{alert('Updated'); loadRecords(); clearForm();};
   }
 }
 
+// Delete record
+function deleteRecord(){
+  if(!selectedRecord){alert('Select record first'); return;}
+  if(confirm('Delete this record?')){
+    const tx=db.transaction('attendance','readwrite').objectStore('attendance').delete(selectedRecord.id);
+    tx.onsuccess=()=>{alert('Deleted'); loadRecords(); clearForm();};
+  }
+}
+
+// Clear form
 function clearForm(){
   selectedRecord=null;
   document.getElementById('studentName').value='';
@@ -333,29 +301,74 @@ function clearForm(){
   lessons.forEach(l=>{document.querySelector(`select[data-lesson="${l}"]`).value='no';});
 }
 
-// Admin management
+// Load records & highlight
+function loadRecords(){
+  const container = document.getElementById('recordsContainer'); 
+  container.innerHTML = '';
+  const val = document.getElementById('globalSearchInput').value.toLowerCase();
+  const tx = db.transaction('attendance','readonly').objectStore('attendance');
+  tx.getAll().onsuccess = e => {
+    const records = e.target.result.filter(r => r.Student.toLowerCase().includes(val) || r.Phone.toLowerCase().includes(val) || r["Class No."].toString().includes(val));
+    if(!records.length) return;
+    const table = document.createElement('table');
+    const thead = document.createElement('thead');
+    const tr = document.createElement('tr');
+    ['id','Student','Phone','Class No.',...lessons].forEach(k=>{const th=document.createElement('th'); th.textContent=k; tr.appendChild(th);});
+    thead.appendChild(tr); table.appendChild(thead);
+    const tbody = document.createElement('tbody');
+    let firstMatchRow = null;
+    records.forEach(r=>{
+      const tr=document.createElement('tr');
+      ['id','Student','Phone','Class No.',...lessons].forEach(f=>{
+        const td=document.createElement('td'); 
+        let cellText=r[f]||'';
+        if(f!=='id' && val){const regex=new RegExp(`(${val.replace(/[.*+?^${}()|[\]\\]/g,'\\$&')})`,'gi'); cellText=cellText.replace(regex, `<span class="match">$1</span>`);}
+        td.innerHTML=cellText;
+        if(lessons.includes(f)) td.className=(r[f]==='yes')?'yes':'no';
+        tr.appendChild(td);
+      });
+      tr.onclick=()=>{selectedRecord=r; fillForm(r); document.querySelectorAll('#recordsContainer tr').forEach(row=>row.classList.remove('selected-row')); tr.classList.add('selected-row');};
+      tbody.appendChild(tr);
+      if(!firstMatchRow) firstMatchRow=tr;
+    });
+    table.appendChild(tbody); container.appendChild(table);
+    if(firstMatchRow){firstMatchRow.scrollIntoView({behavior:'smooth',block:'center'});}
+  };
+}
+
+// Fill form
+function fillForm(r){
+  showTab('formTab');
+  document.getElementById('studentName').value=r.Student;
+  const code=r.Phone.match(/^\+\d+/);
+  if(code){document.getElementById('countryCode').value=code[0]; document.getElementById('studentPhone').value=r.Phone.replace(code[0],'');}
+  else document.getElementById('studentPhone').value=r.Phone;
+  document.getElementById('studentClass').value=r["Class No."];
+  lessons.forEach(l=>document.querySelector(`select[data-lesson="${l}"]`).value=r[l]);
+}
+
+// Admin CRUD
+function renderAdminList(){
+  const container=document.getElementById('adminList'); container.innerHTML='';
+  const tx = db.transaction('admins','readonly').objectStore('admins');
+  tx.getAll().onsuccess = e => {
+    e.target.result.forEach(a=>{
+      const div=document.createElement('div'); div.innerHTML=`<span>${a.username}</span>`;
+      const btn=document.createElement('button'); btn.textContent=a.blocked?'Unblock':'Block';
+      btn.onclick=()=>{const wtx=db.transaction('admins','readwrite').objectStore('admins'); wtx.put({...a,blocked:!a.blocked}).onsuccess=()=>{renderAdminList();};};
+      div.appendChild(btn); container.appendChild(div);
+    });
+  };
+}
+
 function addAdmin(){
   const u=document.getElementById('newAdminUser').value.trim();
   const p=document.getElementById('newAdminPass').value;
-  if(!u||!p) return alert('Enter username and password');
-  adminAccounts.push({username:u,password:p,blocked:false});
-  renderAdminList();
+  if(!u||!p){alert('Enter username/password'); return;}
+  const wtx=db.transaction('admins','readwrite').objectStore('admins');
+  wtx.add({username:u,password:p,blocked:false}).onsuccess=()=>{alert('Added'); renderAdminList();};
+  document.getElementById('newAdminUser').value=''; document.getElementById('newAdminPass').value='';
 }
-function renderAdminList(){
-  const container=document.getElementById('adminList'); container.innerHTML='';
-  adminAccounts.forEach((a,i)=>{
-    const div=document.createElement('div'); div.innerHTML=`<span>${a.username}</span>`;
-    const btn=document.createElement('button'); btn.textContent=a.blocked?'Unblock':'Block';
-    btn.onclick=()=>{a.blocked=!a.blocked;renderAdminList();}
-    div.appendChild(btn);
-    container.appendChild(div);
-  });
-}
-renderAdminList();
-
-// Auto-refresh every 10s
-setInterval(()=>{if(document.getElementById('adminSection').style.display==='block') loadAllRecords();},10000);
 </script>
-
 </body>
 </html>
